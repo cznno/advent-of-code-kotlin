@@ -1,17 +1,47 @@
+import java.nio.file.Files
+import java.nio.file.Path
+import java.util.*
+import java.util.Collections.reverseOrder
+
+
+fun part1(data: List<String>) {
+    var max = 0
+    var sum = 0
+    for (s in data) {
+        if (s.isNotBlank()) {
+            sum += s.toInt()
+        } else {
+            if (sum > max) {
+                max = sum
+            }
+            sum = 0
+        }
+    }
+    println(max)
+}
+
+fun part2(data: List<String>) {
+    val max = PriorityQueue<Int>(4)
+    var sum = 0
+    for (s in data) {
+        if (s.isNotBlank()) {
+            sum += s.toInt()
+        } else {
+            if (max.size < 3) {
+                max.offer(sum)
+            } else if (max.peek() < sum) {
+                max.poll()
+                max.offer(sum)
+            }
+            sum = 0
+        }
+    }
+    println(max.sum())
+}
+
 fun main() {
-    fun part1(input: List<String>): Int {
-        return input.size
-    }
+    val data = Files.readAllLines(Path.of("./input/Day01.txt"))
 
-    fun part2(input: List<String>): Int {
-        return input.size
-    }
-
-    // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day01_test")
-    check(part1(testInput) == 1)
-
-    val input = readInput("Day01")
-    println(part1(input))
-    println(part2(input))
+    part1(data)
+    part2(data)
 }
